@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RAG Pipeline Demo
 
-## Getting Started
+Interactive Retrieval-Augmented Generation demo that makes the full pipeline visible — no black boxes.
 
-First, run the development server:
+**Live:** https://rag-demo-nine.vercel.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What It Does
+
+1. **Load documents** — paste any text (research papers, documentation, notes)
+2. **Chunk** — paragraph-aware splitting with character-level fallback and overlap
+3. **BM25 Retrieval** — Okapi BM25 lexical search, the same algorithm powering Elasticsearch
+4. **Generate** — Claude Haiku answers with inline `[Source N]` citations
+
+Everything is visible: chunk count, BM25 scores per retrieved chunk, matched query terms, and the final grounded answer.
+
+## Tech Stack
+
+- **Next.js 16** (App Router)
+- **BM25** — pure TypeScript implementation (k₁=1.5, b=0.75)
+- **Claude Haiku** — for generation with source citation enforcement
+- **Streaming SSE** — real-time answer display
+
+## Architecture
+
+```
+documents → chunker → chunks[] → BM25 index
+                                        ↑
+query → tokenize ──────────────────────┘ → top-k chunks → Claude Haiku → streaming answer
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### BM25 vs Neural Embeddings
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This demo uses BM25 (lexical retrieval), which is:
+- ✅ Zero external API dependencies
+- ✅ Deterministic and explainable
+- ✅ Production-grade (Elasticsearch default)
+- ⚠️ Vocabulary-dependent (keyword overlap required)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Production systems typically combine BM25 with neural reranking (cross-encoders like `cross-encoder/ms-marco-MiniLM-L-6-v2`) for semantic retrieval at scale.
 
-## Learn More
+## Local Development
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+echo "ANTHROPIC_API_KEY=your_key" > .env.local
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Interview Angle
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Built as a portfolio demonstration of the RAG stack relevant to enterprise AI teams:
+- Retrieval strategy selection and tradeoffs
+- Chunking for context preservation
+- Grounded generation with hallucination prevention
+- Full pipeline transparency
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built by [Harrison Dudley-Rode](https://dudleyrode.com) · [matua-agent](https://github.com/matua-agent)
