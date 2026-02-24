@@ -202,7 +202,7 @@ export default function RagDemo() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
       {/* Header */}
       <header className="border-b border-zinc-800/60 bg-zinc-900/60 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
               <span className="text-2xl">🔍</span> RAG Pipeline Demo
@@ -222,11 +222,11 @@ export default function RagDemo() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
         {/* Explainer */}
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
           <h2 className="font-semibold text-sm text-zinc-300 mb-2">How It Works</h2>
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 flex-wrap">
             {[
               { icon: "📄", label: "1. Load Docs", desc: "Paste any text documents" },
               { icon: "✂️", label: "2. Chunk", desc: "Split into overlapping segments" },
